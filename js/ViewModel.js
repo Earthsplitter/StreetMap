@@ -3,10 +3,10 @@
  */
 var mediaQuery = window.matchMedia("(max-width:960px)");
 var topSights = [
-    {name: "Sydney Opera House", coordinate: {latitude: -33.856802, longitude: 151.215254}, visible: true},
-    {name: "Sydney Harbour Bridge", coordinate: {latitude: -33.852030, longitude: 151.210776}, visible: true},
-    {name: "The Rocks", coordinate: {latitude: -33.859243, longitude: 151.208196}, visible: true},
-    {name: "Darling Harbour", coordinate: {latitude: -33.874871, longitude: 151.200911}, visible: true}
+    {name: "Sydney Opera House", coordinate: {lat: -33.856802, lng: 151.215254}, visible: true},
+    {name: "Sydney Harbour Bridge", coordinate: {lat: -33.852030, lng: 151.210776}, visible: true},
+    {name: "The Rocks", coordinate: {lat: -33.859243, lng: 151.208196}, visible: true},
+    {name: "Darling Harbour", coordinate: {lat: -33.874871, lng: 151.200911}, visible: true}
 ];
 
 var ViewModel = function () {
@@ -29,13 +29,17 @@ var ViewModel = function () {
     topSights.forEach(function (element) {
         self.sights.push(ko.observable(element));
     });
-
     /**
      * Data Storage: the value of input
      */
     this.currentSearch = ko.observable("");
-
+    /**
+     * When search bar updates, this method updates list and map
+     */
     this.setVisible = function () {
+        /**
+         * Update the list
+         */
         self.sights().forEach(function (element,key) {
             var tempString;
             /**
@@ -54,8 +58,24 @@ var ViewModel = function () {
                 element(tempString);
             }
         })
+        /**
+         * Update the map
+         */
+        var bounds = new google.maps.LatLngBounds();
+        markers.forEach(function (element,key) {
+            var ifVisible = self.sights()[key]().visible;
+            element.setMap(ifVisible?map:null);
+            if (ifVisible) {
+                bounds.extend(element.position);
+                element.setAnimation(google.maps.Animation.DROP);
+            }
+        });
+        map.fitBounds(bounds);
     };
 
+    /**
+     * hide or show search bar
+     */
     this.toggleSideBar = function () {
         self.showSearchBar(!self.showSearchBar());
         /**
@@ -64,6 +84,21 @@ var ViewModel = function () {
          * we set a timer so that map will redraw after the transition
          */
         setTimeout(google.maps.event.trigger,200,map,'resize');
+    };
+
+    /**
+     * show infoWindow when click items in the list
+     */
+    this.showInfoWindow = function (place) {
+        //Find the corresponding marker
+        var popSite;
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].title === place.name) {
+                popSite = markers[i];
+                break;
+            }
+        }
+        populateInfoWindow(popSite, largeInfowindow);
     }
 };
 ko.applyBindings(new ViewModel());

@@ -1,11 +1,3 @@
-.mainPanel {
-    width: 100%;
-}
-
-.search-bar {
-     width: 0;       /* Change this with javascript */
- }
-
 .app-name-smartPhone {
     display: inline;
     font: 16px 'Open Sans', sans-serif;

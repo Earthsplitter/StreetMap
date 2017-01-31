@@ -15,7 +15,7 @@
         <h1 class="app-name" data-bind="text: appName"></h1>
         <input type="text" id="search-bar-input" data-bind="value: currentSearch, valueUpdate: 'afterkeydown', event: { keyup: setVisible}" placeholder="Search here">
         <ul class="site-list" data-bind="foreach: sights">
-            <li><a href="#" class="site" data-bind="text: name, visible: visible"></a></li>
+            <li><a href="#" class="site" data-bind="click: $parent.showInfoWindow, text: name, visible: visible"></a></li>
         </ul>
     </section>
     <section class="mainPanel">
