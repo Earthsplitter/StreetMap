@@ -6,7 +6,8 @@ var topSights = [
     {name: "Sydney Opera House", coordinate: {lat: -33.856802, lng: 151.215254}, visible: true},
     {name: "Sydney Harbour Bridge", coordinate: {lat: -33.852030, lng: 151.210776}, visible: true},
     {name: "The Rocks", coordinate: {lat: -33.859243, lng: 151.208196}, visible: true},
-    {name: "Darling Harbour", coordinate: {lat: -33.874871, lng: 151.200911}, visible: true}
+    {name: "Darling Harbour", coordinate: {lat: -33.874871, lng: 151.200911}, visible: true},
+    {name: "University of New South Wales", coordinate: {lat: -33.917130, lng: 151.231059}, visible: true}
 ];
 
 var ViewModel = function () {
