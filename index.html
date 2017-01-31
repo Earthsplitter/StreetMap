@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/styles.css" rel="stylesheet">
+    <link href="css/smartphone.css" media="(max-width: 960px)" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <title>Street Map</title>
+</head>
+<body>
+<div class="container">
+    <section class="search-bar" data-bind="style: { width: showSearchBar()?'350px':'0'}">
+        <h1 class="app-name" data-bind="text: appName"></h1>
+        <input type="text" id="search-bar-input" data-bind="value: currentSearch, valueUpdate: 'afterkeydown', event: { keyup: setVisible}" placeholder="Search here">
+        <ul class="site-list" data-bind="foreach: sights">
+            <li><a href="#" class="site" data-bind="text: name, visible: visible"></a></li>
+        </ul>
+    </section>
+    <section class="mainPanel">
+        <div class="title">
+            <span class="toggle" data-bind="click: toggleSideBar"><i class="fa fa-bars btn"></i></span>
+            <h1 class="app-name-smartPhone">Sydney Sites</h1>
+        </div>
+        <div id="map">
+        </div>
+    </section>
+</div>
+<script src="js/map.js"></script>
+<script src="js/knockout-3.4.1.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8sF8ZGTafVlEINx00npUJHLC7iWDH3aI&callback=initMap" async defer></script>
+<script src="js/ViewModel.js"></script>
+</body>
+</html>
