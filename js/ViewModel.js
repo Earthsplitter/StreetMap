@@ -18,26 +18,26 @@ var ViewModel = function () {
     /**
      * Data Storage: if show sideBar
      */
-    this.showSearchBar = ko.observable(!mediaQuery.matches);
+    self.showSearchBar = ko.observable(!mediaQuery.matches);
     /**
      * Data Storage: App's name
      */
-    this.appName = ko.observable("Sydney Sites");
+    self.appName = ko.observable("Sydney Sites");
     /**
      * Data Storage: the list of sites, an observableArray of observable object
      */
-    this.sights = ko.observableArray([]);
+    self.sights = ko.observableArray([]);
     topSights.forEach(function (element) {
         self.sights.push(ko.observable(element));
     });
     /**
      * Data Storage: the value of input
      */
-    this.currentSearch = ko.observable("");
+    self.currentSearch = ko.observable("");
     /**
      * When search bar updates, this method updates list and map
      */
-    this.setVisible = function () {
+    self.setVisible = function () {
         /**
          * Update the list
          */
@@ -63,12 +63,11 @@ var ViewModel = function () {
          * Update the map
          */
         var bounds = new google.maps.LatLngBounds();
-        markers.forEach(function (element,key) {
-            var ifVisible = self.sights()[key]().visible;
-            element.setMap(ifVisible?map:null);
-            if (ifVisible) {
-                bounds.extend(element.position);
-                element.setAnimation(google.maps.Animation.DROP);
+        topSights.forEach(function (element,key) {
+            element.marker.setVisible(self.sights()[key]().visible);
+            if (self.sights()[key]().visible) {
+                bounds.extend(element.marker.position);
+                element.marker.setAnimation(google.maps.Animation.DROP);
             }
         });
         map.fitBounds(bounds);
@@ -77,7 +76,7 @@ var ViewModel = function () {
     /**
      * hide or show search bar
      */
-    this.toggleSideBar = function () {
+    self.toggleSideBar = function () {
         self.showSearchBar(!self.showSearchBar());
         /**
          * When div changes, redraw the map.
@@ -90,12 +89,12 @@ var ViewModel = function () {
     /**
      * show infoWindow when click items in the list
      */
-    this.showInfoWindow = function (place) {
+    self.showInfoWindow = function (place) {
         //Find the corresponding marker
         var popSite;
-        for (var i = 0; i < markers.length; i++) {
-            if (markers[i].title === place.name) {
-                popSite = markers[i];
+        for (var i = 0; i < topSights.length; i++) {
+            if (topSights[i].marker.title === place.name) {
+                popSite = topSights[i].marker;
                 break;
             }
         }

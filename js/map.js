@@ -4,12 +4,15 @@
 var map;
 var markers = [];
 var largeInfowindow;
+//since no const in ES5, I use var
+var initCenter = {lat: -33.86882, lng: 151.209296};
 /**
  * initialize google maps
  */
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -33.86882, lng: 151.209296},
+        center: initCenter,
+        //this parameter is meaningless, since map.fitBounds will change it
         zoom: 13
     });
 
@@ -18,7 +21,7 @@ function initMap() {
     largeInfowindow = new google.maps.InfoWindow();
 
     topSights.forEach(function (element, key) {
-        var marker = new google.maps.Marker({
+        element.marker = new google.maps.Marker({
             map: map,
             position: element.coordinate,
             title: element.name,
@@ -26,12 +29,9 @@ function initMap() {
             id: key,
             info: ""
         });
-        markers.push(marker);
         bounds.extend(element.coordinate);
-        markers.forEach(function (element) {
-            element.addListener('click', function () {
-                populateInfoWindow(this, largeInfowindow);
-            });
+        element.marker.addListener('click', function () {
+            populateInfoWindow(this, largeInfowindow);
         });
     });
     map.fitBounds(bounds);
@@ -81,17 +81,17 @@ function populateInfoWindow(marker, infowindow) {
             // success, store data in marker.info
             xhr.done(function (response) {
                 var articleList = response[1];
+                var output = [];
                 articleList.forEach(function (element) {
                     var url = "http://en.wikipedia.org/wiki/" + element;
-                    var output = [];
-                    output.push("<a href='" + url + "'>" + element + "</a>");
-                    marker.info = "<div>" + "<p>" + marker.title + "</p><hr/><p>See wikipedia:</p>" + output + "</div>";
+                    output.push("<p><a href='" + url + "'>" + element + "</a></p>");
                 });
+                marker.info = "<div>" + "<p>" + marker.title + "</p><hr/><p>See wikipedia:</p>" + output.join(" ") + "</div>";
                 display(marker, infowindow);
             });
             // fail, set error message
             xhr.fail(function () {
-                marker.info = "<div>" + "Failed to fetch information, Please check your network." + "</div>"
+                marker.info = "<div>" + "Failed to fetch information, Please check your network." + "</div>";
                 display(marker, infowindow);
             })
         } else {
@@ -99,4 +99,9 @@ function populateInfoWindow(marker, infowindow) {
             display(marker, infowindow);
         }
     }
+}
+
+function googleError() {
+    $("#map").append("<div class='errorMessage'>There is something wrong with Google Maps. Please reload this page later.</div>");
+    alert("error");
 }

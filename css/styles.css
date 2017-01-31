@@ -95,3 +95,7 @@ html, body, .container {
 .btn {
     margin: 5px 0 ;
 }
+
+.errorMessage {
+    text-align: center;
+}
